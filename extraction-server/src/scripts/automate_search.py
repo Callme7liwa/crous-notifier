@@ -1,118 +1,123 @@
+from json import dumps
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.edge.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
+from kafka import KafkaProducer
 import time
-import pandas as pd  # Pour la gestion des fichiers Excel
+import pandas as pd
+import six
+import sys
+
+if sys.version_info >= (3, 12, 0):
+    sys.modules['kafka.vendor.six.moves'] = six.moves
 
 def setup_driver():
-       service = Service(EdgeChromiumDriverManager().install())
-       options = webdriver.EdgeOptions()
-       options.add_argument('--start-maximized')
-       options.add_argument('--disable-extensions')
-       options.add_argument('--disable-gpu')
-       options.add_argument('--no-sandbox')
-       options.add_argument('--ignore-certificate-errors')
-       options.add_argument('--disable-popup-blocking')
-       options.add_experimental_option('excludeSwitches', ['enable-logging'])
-       return webdriver.Edge(service=service, options=options)
+    service = Service(EdgeChromiumDriverManager().install())
+    options = webdriver.EdgeOptions()
+    options.add_argument('--start-maximized')
+    options.add_argument('--disable-extensions')
+    options.add_argument('--disable-gpu')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--ignore-certificate-errors')
+    options.add_argument('--disable-popup-blocking')
+    options.add_experimental_option('excludeSwitches', ['enable-logging'])
+    return webdriver.Edge(service=service, options=options)
 
 def wait_and_find_element(driver, by, value):
     return WebDriverWait(driver, 20).until(EC.visibility_of_element_located((by, value)))
 
 def extract_logement_data(driver):
-    print("entrée ici :")
+    print("Extracting housing data:")
 
-    # Attendre que les éléments de logement soient présents
     WebDriverWait(driver, 20).until(
         EC.presence_of_all_elements_located((By.CLASS_NAME, "fr-card"))
     )
 
-    # Extraire les données de chaque logement
     logements = driver.find_elements(By.CLASS_NAME, "fr-card")
     logement_data = []
 
     for logement in logements:
         try:
-            # Extraire le titre
             titre_element = logement.find_element(By.CLASS_NAME, "fr-card__title")
             titre = titre_element.text
             
-            # Extraire la description
             desc_element = logement.find_element(By.CLASS_NAME, "fr-card__desc")
             description = desc_element.text
             
-    
-            # Créer un dictionnaire pour les données du logement
             logement_info = {
                 "titre": titre,
                 "description": description,
             }
-            print("Logement trouvé :", logement_info)
+            print("Housing found:", logement_info)
             logement_data.append(logement_info)
         except Exception as e:
-            print(f"Erreur lors de l'extraction des données d'un logement : {e}")
+            print(f"Error extracting housing data: {e}")
 
     return logement_data
 
 def search_logements(driver, ville, prix_max):
     driver.get("https://trouverunlogement.lescrous.fr/")
     
-    # Saisie de la ville
     ville_input = wait_and_find_element(driver, By.ID, "PlaceAutocompletearia-autocomplete-1-input")
     ville_input.clear()
     ville_input.send_keys(ville)
-    time.sleep(1)  # Attente pour la suggestion
+    time.sleep(1)
 
-    # Attendre que la liste des suggestions soit visible
     WebDriverWait(driver, 20).until(
         EC.presence_of_element_located((By.ID, "PlaceAutocompletearia-autocomplete-1-list"))
     )
 
-    # Sélectionner la première suggestion
     first_suggestion = driver.find_element(By.XPATH, "(//li[contains(@class, 'PlaceAutocomplete__option')])[1]")
-    first_suggestion.click()  # Cliquez sur la première suggestion
+    first_suggestion.click()
 
-    # Saisie du prix maximum
     prix_input = wait_and_find_element(driver, By.ID, "SearchFormPrice")
     prix_input.clear()
     prix_input.send_keys(str(prix_max))
     
-    # Clic sur le bouton de recherche
     rechercher_button = wait_and_find_element(driver, By.XPATH, "//button[contains(text(), 'Lancer une recherche')]")
     rechercher_button.click()
 
-    # Attendre que les résultats soient chargés avant d'extraire les données
     WebDriverWait(driver, 20).until(
         EC.presence_of_all_elements_located((By.CLASS_NAME, "fr-card"))
     )
 
     time.sleep(10)
 
-    # Appeler extract_logement_data pour récupérer les résultats
     logement_data = extract_logement_data(driver)
     
-    return logement_data  # Retourner les données extraites
+    return logement_data
 
 def save_to_csv(data, filename):
-    if data:  # Assurez-vous que la liste n'est pas vide
+    if data:
         df = pd.DataFrame(data)
-        df.to_csv(filename, index=False, encoding='utf-8')  # Sauvegarder dans un fichier CSV
-        print(f"Données sauvegardées dans {filename}")
+        df.to_csv(filename, index=False, encoding='utf-8')
+        print(f"Data saved to {filename}")
     else:
-        print("Aucune donnée à sauvegarder.")
+        print("No data to save.")
+
+def send_to_kafka(data):
+    producer = KafkaProducer(
+        bootstrap_servers=['localhost:9092'],
+        value_serializer=lambda x: dumps(x).encode('utf-8')
+    )
+    for logement in data:
+        producer.send('housing_topic', value=logement)
+    
+    producer.flush()
+    print("Data sent to Kafka topic 'housing_topic'")
 
 def main():
     driver = setup_driver()
     try:
-        print("hello world")
+        print("Starting housing search...")
         logements_data = search_logements(driver, "Le Bourget-du-Lac (73370)", 0)
         save_to_csv(logements_data, "logements.csv")
-        print(f"Données extraites et sauvegardées dans logements.xlsx")
+        send_to_kafka(logements_data)
     except Exception as e:
-        print(f"Une erreur s'est produite : {e}")
+        print(f"An error occurred: {e}")
     finally:
         driver.quit()
 
