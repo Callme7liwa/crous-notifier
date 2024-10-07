@@ -113,7 +113,7 @@ def main():
     driver = setup_driver()
     try:
         print("Starting housing search...")
-        logements_data = search_logements(driver, "Le Bourget-du-Lac (73370)", 0)
+        logements_data = search_logements(driver, "Tulle (19000)", 0)
         save_to_csv(logements_data, "logements.csv")
         send_to_kafka(logements_data)
     except Exception as e:
@@ -123,3 +123,20 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+# ana user 9dim. 
+    # notifié par crous cezeaux 
+    # cs
+
+## Python
+    # - Extraction des donnees : 
+    # - Save on CSV file.
+    # - clean ( Logement recemenet ete notifié par les utilisateurs - attributs)
+        # - Parcourir chaque ligne du  nouveau csv.
+        # - comprarer avec toutes les autres lignes existantes dans old csv.
+        # - Si Time > 10 minutes
+    # - Send to Kafka topic.
+
+## Java
+    # -  

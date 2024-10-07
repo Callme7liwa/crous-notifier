@@ -1,0 +1,32 @@
+.select-group {
+    position: relative !important;
+    display: flex;
+    flex-direction: column !important;;
+
+    select {
+        position: relative;
+        padding: 15px 10px;
+        color: black;
+    }
+
+    label {
+        font-size: 16 * 0.7;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+
+  
+        @media (max-width: 480px) {
+          font-size: 16 * 0.6;
+        }
+    }
+
+    
+    .error-message {
+        div {
+            color: red;
+            font-size: 12px;
+            font-weight: bold;
+        }
+    }
+}

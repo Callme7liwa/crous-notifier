@@ -1,0 +1,20 @@
+<div class="select-group">
+    <label>{{ label }}</label>
+    <select
+      name="{{ name }}"
+      [(ngModel)]="selectedValue"
+      (change)="onValueChange($event)"
+      [attr.aria-label]="placeholder"
+      [disabled]="isDisabled"
+    >
+      <option [ngValue]="null" disabled>{{ placeholder }}</option>
+      <option *ngFor="let option of options" [ngValue]="option.value">
+        {{ option.display }}
+      </option>
+    </select>
+  
+    <div *ngIf="control?.touched && control?.invalid" class="error-message">
+      <div *ngIf="control?.errors?.['required']">This field is required.</div>
+      <div *ngIf="control?.errors?.['minlength']">Minimum length is not met.</div>
+    </div>
+  </div>
