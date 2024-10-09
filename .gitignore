@@ -1,2 +1,22 @@
 # ignore virtual python env
 extraction-server/extractionenv
+
+
+
+# Maven
+notifier-server/zzz/target/
+notifier-server/zzz/*.log
+notifier-server/zzz/.mvn/
+
+# IDE
+notifier-server/zzz/.idea/
+notifier-server/zzz/.vscode/
+notifier-server/zzz/*.iml
+
+# Fichiers temporaires
+notifier-server/zzz/*~
+notifier-server/zzz/*.tmp
+notifier-server/zzz/*.bak
+
+# Fichiers de configuration sensibles
+notifier-server/zzz/.env

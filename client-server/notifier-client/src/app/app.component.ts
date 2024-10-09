@@ -78,9 +78,6 @@ export class AppComponent {
       this.registerForm.reset();
       alert('Form submitted successfully!');
     }
-
-    
-   
   }
 
 }
