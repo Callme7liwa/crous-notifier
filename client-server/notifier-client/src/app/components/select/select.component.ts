@@ -33,8 +33,10 @@ export class SelectComponent {
   @Input() control!: FormControl | null;
   @Input() defaultValue: number | string | null = null; // Default value input
   @Input() options: Option[] = [];
+  @Output() handleClickOption: EventEmitter<string> = new EventEmitter<string>(); 
 
   selectedValue: number | string | null = null;
+
   isDisabled: boolean = false;
 
 
@@ -77,5 +79,6 @@ export class SelectComponent {
     this.onChange(this.selectedValue);
     this.onTouched();
     this.selectedValueChange.emit(this.selectedValue);
+    this.handleClickOption.emit(this.selectedValue?.toString());
   }
 }
