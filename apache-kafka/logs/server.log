@@ -1,0 +1,7 @@
+[2024-10-10 16:00:23,203] WARN Close of session 0x100017807890000 (org.apache.zookeeper.server.NIOServerCnxn)
+java.net.SocketException: Connection reset
+	at java.base/sun.nio.ch.SocketChannelImpl.throwConnectionReset(SocketChannelImpl.java:401)
+	at java.base/sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:434)
+	at org.apache.zookeeper.server.NIOServerCnxn.doIO(NIOServerCnxn.java:334)
+	at org.apache.zookeeper.server.NIOServerCnxnFactory$IOWorkRequest.doWork(NIOServerCnxnFactory.java:508)
+	at o[2024-10-10 16:00:38,666] INFO Expiring session 0x100017807890000, timeout of 18000ms exceeded (org.apache.zookeeper.server.ZooKeeperServer)
