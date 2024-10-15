@@ -19,4 +19,4 @@ def consume_messages(topic):
         print(f"Message reçu : {logement_info}")
 
 if __name__ == "__main__":
-    consume_messages('housing_topic')
+    consume_messages('housing-topic')
