@@ -10,11 +10,9 @@ import time
 import pandas as pd
 import six
 import sys
-import random
 
 if sys.version_info >= (3, 12, 0):
     sys.modules['kafka.vendor.six.moves'] = six.moves
-
 
 def setup_driver():
     service = Service(EdgeChromiumDriverManager().install())
@@ -28,10 +26,8 @@ def setup_driver():
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
     return webdriver.Edge(service=service, options=options)
 
-
 def wait_and_find_element(driver, by, value):
     return WebDriverWait(driver, 20).until(EC.visibility_of_element_located((by, value)))
-
 
 def extract_logement_data(driver):
     print("Extracting housing data:")
@@ -47,13 +43,11 @@ def extract_logement_data(driver):
         try:
             titre_element = logement.find_element(By.CLASS_NAME, "fr-card__title")
             titre = titre_element.text
-
+            
             desc_element = logement.find_element(By.CLASS_NAME, "fr-card__desc")
             description = desc_element.text
-
-            random_id = random.randint(1, 1000)
+            
             logement_info = {
-                "id": random_id,
                 "titre": titre,
                 "description": description,
             }
@@ -64,10 +58,9 @@ def extract_logement_data(driver):
 
     return logement_data
 
-
 def search_logements(driver, ville, prix_max):
     driver.get("https://trouverunlogement.lescrous.fr/")
-
+    
     ville_input = wait_and_find_element(driver, By.ID, "PlaceAutocompletearia-autocomplete-1-input")
     ville_input.clear()
     ville_input.send_keys(ville)
@@ -83,7 +76,7 @@ def search_logements(driver, ville, prix_max):
     prix_input = wait_and_find_element(driver, By.ID, "SearchFormPrice")
     prix_input.clear()
     prix_input.send_keys(str(prix_max))
-
+    
     rechercher_button = wait_and_find_element(driver, By.XPATH, "//button[contains(text(), 'Lancer une recherche')]")
     rechercher_button.click()
 
@@ -94,9 +87,8 @@ def search_logements(driver, ville, prix_max):
     time.sleep(10)
 
     logement_data = extract_logement_data(driver)
-
+    
     return logement_data
-
 
 def save_to_csv(data, filename):
     if data:
@@ -106,18 +98,16 @@ def save_to_csv(data, filename):
     else:
         print("No data to save.")
 
-
 def send_to_kafka(data):
     producer = KafkaProducer(
         bootstrap_servers=['localhost:9092'],
         value_serializer=lambda x: dumps(x).encode('utf-8')
     )
     for logement in data:
-        producer.send('housing-topic', value=logement)
-
+        producer.send('housing_topic', value=logement)
+    
     producer.flush()
-    print("Data sent to Kafka topic 'housing-topic'")
-
+    print("Data sent to Kafka topic 'housing_topic'")
 
 def main():
     driver = setup_driver()
@@ -131,22 +121,22 @@ def main():
     finally:
         driver.quit()
 
-
 if __name__ == "__main__":
     main()
 
-# ana user 9dim.
-# notifié par crous cezeaux
-# cs
+
+# ana user 9dim. 
+    # notifié par crous cezeaux 
+    # cs
 
 ## Python
-# - Extraction des donnees :
-# - Save on CSV file.
-# - clean ( Logement recemenet ete notifié par les utilisateurs - attributs)
-# - Parcourir chaque ligne du  nouveau csv.
-# - comprarer avec toutes les autres lignes existantes dans old csv.
-# - Si Time > 10 minutes
-# - Send to Kafka topic.
+    # - Extraction des donnees : 
+    # - Save on CSV file.
+    # - clean ( Logement recemenet ete notifié par les utilisateurs - attributs)
+        # - Parcourir chaque ligne du  nouveau csv.
+        # - comprarer avec toutes les autres lignes existantes dans old csv.
+        # - Si Time > 10 minutes
+    # - Send to Kafka topic.
 
 ## Java
-# -
+    # -  
