@@ -1,14 +1,15 @@
 package isima.crousnotifier.zzz.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity(name = "User")
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity(name = "`user`")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data

@@ -10,7 +10,6 @@ import time
 import pandas as pd
 import six
 import sys
-import random
 
 if sys.version_info >= (3, 12, 0):
     sys.modules['kafka.vendor.six.moves'] = six.moves
@@ -43,6 +42,7 @@ def extract_logement_data(driver):
     logements = driver.find_elements(By.CLASS_NAME, "fr-card")
     logement_data = []
 
+    i = 0
     for logement in logements:
         try:
             titre_element = logement.find_element(By.CLASS_NAME, "fr-card__title")
@@ -51,9 +51,9 @@ def extract_logement_data(driver):
             desc_element = logement.find_element(By.CLASS_NAME, "fr-card__desc")
             description = desc_element.text
 
-            random_id = random.randint(1, 1000)
+            i += 1
             logement_info = {
-                "id": random_id,
+                "id": i,
                 "titre": titre,
                 "description": description,
             }
@@ -70,15 +70,18 @@ def search_logements(driver, ville, prix_max):
 
     ville_input = wait_and_find_element(driver, By.ID, "PlaceAutocompletearia-autocomplete-1-input")
     ville_input.clear()
-    ville_input.send_keys(ville)
-    time.sleep(1)
 
-    WebDriverWait(driver, 20).until(
-        EC.presence_of_element_located((By.ID, "PlaceAutocompletearia-autocomplete-1-list"))
-    )
+    if ville:
+        ville_input.send_keys(ville)
+        time.sleep(1)
 
-    first_suggestion = driver.find_element(By.XPATH, "(//li[contains(@class, 'PlaceAutocomplete__option')])[1]")
-    first_suggestion.click()
+        WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located((By.ID, "PlaceAutocompletearia-autocomplete-1-list"))
+        )
+
+        # Cliquer sur la première suggestion si une ville est fournie
+        first_suggestion = driver.find_element(By.XPATH, "(//li[contains(@class, 'PlaceAutocomplete__option')])[1]")
+        first_suggestion.click()
 
     prix_input = wait_and_find_element(driver, By.ID, "SearchFormPrice")
     prix_input.clear()
@@ -113,17 +116,24 @@ def send_to_kafka(data):
         value_serializer=lambda x: dumps(x).encode('utf-8')
     )
     for logement in data:
-        producer.send('housing-topic', value=logement)
+        try:
+            producer.send(
+                'housing_topic',
+                value=logement,
+                headers=[('__TypeId__', b'isima.crousnotifier.zzz.models.Logement')]
+            )
+        except Exception as e:
+            print(f"Failed to send message: {e}")
 
     producer.flush()
-    print("Data sent to Kafka topic 'housing-topic'")
+    print("Data sent to Kafka topic 'housing_topic'")
 
 
 def main():
     driver = setup_driver()
     try:
         print("Starting housing search...")
-        logements_data = search_logements(driver, "Tulle (19000)", 0)
+        logements_data = search_logements(driver, "", 0)
         save_to_csv(logements_data, "logements.csv")
         send_to_kafka(logements_data)
     except Exception as e:
@@ -134,19 +144,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-# ana user 9dim.
-# notifié par crous cezeaux
-# cs
-
-## Python
-# - Extraction des donnees :
-# - Save on CSV file.
-# - clean ( Logement recemenet ete notifié par les utilisateurs - attributs)
-# - Parcourir chaque ligne du  nouveau csv.
-# - comprarer avec toutes les autres lignes existantes dans old csv.
-# - Si Time > 10 minutes
-# - Send to Kafka topic.
-
-## Java
-# -

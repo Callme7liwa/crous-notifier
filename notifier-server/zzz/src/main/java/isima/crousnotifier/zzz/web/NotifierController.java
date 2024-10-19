@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class NotifierController {
 
     @RequestMapping("/register")
-    public String register(){
+    public String register() {
         return "hello world";
     }
 
