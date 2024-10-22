@@ -1,28 +1,39 @@
 
 package isima.crousnotifier.zzz.web;
 
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import isima.crousnotifier.zzz.models.User;
-import isima.crousnotifier.zzz.service.UserService;
+// import isima.crousnotifier.zzz.models.User;
+import isima.crousnotifier.zzz.service.TelegramService;
+// import isima.crousnotifier.zzz.service.UserService;
 
-@RestController("/api/v1/notifier")
+@RestController()
+@RequestMapping("/notifier")
 public class NotifierController {
 
-    private final UserService userService;
+    // private final UserService userService;
+    private final TelegramService telegramService;
 
-    public NotifierController(UserService userService) {
-        this.userService = userService;
+    public NotifierController(TelegramService telegramService) {
+        // this.userService = userService;
+        this.telegramService = telegramService;
+    }
+
+    @GetMapping("")
+    public String getHelloWorld(){
+        return "Hello World";
     }
     
-    
 
-    @RequestMapping("/register")
-    public User register(@RequestBody User user){
-        User newUser = userService.registerUser(user);
-        return newUser;
+    @PostMapping("/send-to-group")
+    public String sendMessageToGroup(@RequestParam String message) {
+        telegramService.sendMessageToGroup(message);
+        return "Message sent to group!";
     }
+
 
 }
