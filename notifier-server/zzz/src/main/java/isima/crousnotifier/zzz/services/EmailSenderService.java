@@ -10,13 +10,13 @@ import org.springframework.stereotype.Service;
 public class EmailSenderService {
     private JavaMailSender javaMailSender;
 
-    public void sendEmail(String toEmail, String subject, String body){
+    public void sendEmail(String toEmail, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("kabmouad274@gmail.com");
         message.setTo(toEmail);
         message.setText(body);
         message.setSubject(subject);
         javaMailSender.send(message);
-        System.out.println("#############Mail sent successfully  ##############");
+        System.out.println("----------------- Mail sent successfully -----------------");
     }
 }

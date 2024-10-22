@@ -10,6 +10,7 @@ import time
 import pandas as pd
 import six
 import sys
+import re
 
 if sys.version_info >= (3, 12, 0):
     sys.modules['kafka.vendor.six.moves'] = six.moves
@@ -31,6 +32,9 @@ def setup_driver():
 def wait_and_find_element(driver, by, value):
     return WebDriverWait(driver, 20).until(EC.visibility_of_element_located((by, value)))
 
+def extract_zip_code(description):
+    match = re.search(r'\b\d{5}\b', description)
+    return match.group() if match else None
 
 def extract_logement_data(driver):
     print("Extracting housing data:")
@@ -50,12 +54,13 @@ def extract_logement_data(driver):
 
             desc_element = logement.find_element(By.CLASS_NAME, "fr-card__desc")
             description = desc_element.text
-
+            code_zip = extract_zip_code(description)
             i += 1
             logement_info = {
                 "id": i,
                 "titre": titre,
                 "description": description,
+                "codeZip": code_zip,
             }
             print("Housing found:", logement_info)
             logement_data.append(logement_info)

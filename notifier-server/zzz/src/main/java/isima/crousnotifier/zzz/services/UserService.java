@@ -1,14 +1,11 @@
 package isima.crousnotifier.zzz.services;
 
-import isima.crousnotifier.zzz.models.Logement;
 import isima.crousnotifier.zzz.models.User;
 import isima.crousnotifier.zzz.repositories.LogementRepository;
 import isima.crousnotifier.zzz.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,18 +20,6 @@ public class UserService {
         if (existingUser.isPresent()) {
             throw new Exception("Email already exists");
         }
-        List<Logement> logements = new ArrayList<>();
-        String[] crousArray = user.getListCrous().split(",");
-        for (String crous : crousArray) {
-            Logement logement = new Logement();
-            logement.setTitre(crous.trim());
-            logement.setUser(user);
-            logements.add(logement);
-        }
-        User savedUser = userRepository.save(user);
-        for (Logement logement : logements) {
-            logementRepository.save(logement);
-        }
         emailSenderService.sendEmail(
                 user.getEmail(),
                 "Bienvenue sur Crous Notifier ! Votre recherche de logement commence ici",
@@ -46,6 +31,6 @@ public class UserService {
                         "L’équipe Crous Notifier\n" +
                         "Simplifiez votre recherche de logement étudiant."
         );
-        return savedUser;
+        return userRepository.save(user);
     }
 }

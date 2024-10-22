@@ -1,15 +1,11 @@
 package isima.crousnotifier.zzz.models;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@Entity(name = "`user`")
+@Entity(name = "users")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -20,5 +16,5 @@ public class User {
     private String fullName;
     private String email;
     private String phoneNumber;
-    private String listCrous;
+    private String listCodeDepartement;
 }
