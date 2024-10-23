@@ -32,4 +32,5 @@ Spring Boot listens for Kafka messages and matches users based on their preferen
 Users are notified about matching housing opportunities via email or SMS.
 
 
-![image](https://github.com/user-attachments/assets/70faf413-91b2-47da-898a-6256548bf82d)
+![Architecture-PROJET](https://github.com/user-attachments/assets/30824727-7cc0-4303-a2b2-b1f9316bbfdd)
+
