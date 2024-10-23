@@ -1,7 +1,10 @@
+### IntelliJ IDEA ###
+.idea/
+
 # ignore virtual python env
 extraction-server/extractionenv
-
-
+# ignore logements csv file
+extraction-server/src/scripts/logements.csv
 
 # Maven
 notifier-server/zzz/target/
