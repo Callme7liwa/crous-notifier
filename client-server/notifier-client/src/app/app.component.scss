@@ -94,3 +94,22 @@ body {
         }
     }
 }
+
+.list-selected-crous {
+    position: relative;
+    display: flex;
+    gap: 10px !important;
+    flex-wrap: wrap;
+    .crous-selected {
+        position: relative;
+        background-color: red;
+        color: white;
+        padding: 5px;
+        border-radius: 5px;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        font-size: 9px;
+        cursor: pointer !important;
+        font-weight: bold;
+    }
+}
+

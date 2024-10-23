@@ -36,14 +36,24 @@
       />
 
       <crous-select 
-        [options]="crousList"
+        [options]="crousListToDisplay"
         label= 'Selectionner ton crous'
         [control]="getControl('crous')"
         [required]="false"
         placeholder='Selectionner ton crous'
         name = 'crous'   
         formControlName="crous"
+        (handleClickOption)="handleAddSelectedCrous($event)"
       />
+
+      <div *ngIf="selectedCrous.length > 0" class="list-selected-crous">
+        <div   *ngFor="let crous of selectedCrous" (click)="handleRemoveSelectedCrous(crous)"  class="crous-selected">
+          {{crous}}
+        </div>
+        <div *ngIf="selectedCrous.length === 0" class="crous-selected">
+          Aucun crous selectionné
+        </div>
+      </div>
   
      
       <button class='button-submit' type="submit" (click)="handleButtonClick()">
