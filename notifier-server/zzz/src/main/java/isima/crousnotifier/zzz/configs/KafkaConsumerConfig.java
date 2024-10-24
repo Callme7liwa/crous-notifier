@@ -1,4 +1,4 @@
-package isima.crousnotifier.zzz.config;
+package isima.crousnotifier.zzz.configs;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;

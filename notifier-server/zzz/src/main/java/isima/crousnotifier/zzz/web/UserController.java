@@ -1,4 +1,4 @@
-package isima.crousnotifier.zzz.controllers;
+package isima.crousnotifier.zzz.web;
 
 import isima.crousnotifier.zzz.models.User;
 import isima.crousnotifier.zzz.services.UserService;

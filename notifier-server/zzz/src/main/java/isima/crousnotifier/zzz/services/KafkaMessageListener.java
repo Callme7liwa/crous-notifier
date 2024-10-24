@@ -1,6 +1,7 @@
 package isima.crousnotifier.zzz.services;
 
 import isima.crousnotifier.zzz.models.Logement;
+import isima.crousnotifier.zzz.models.SmsRequest;
 import isima.crousnotifier.zzz.models.User;
 import isima.crousnotifier.zzz.repositories.LogementRepository;
 import isima.crousnotifier.zzz.repositories.UserRepository;
@@ -17,6 +18,7 @@ public class KafkaMessageListener {
     private final LogementRepository logementRepository;
     private final UserRepository userRepository;
     private final EmailSenderService emailSenderService;
+    private final TwilioSmsSender twilioSmsSender;
     private Map<User, List<Logement>> userLogementsMap = new ConcurrentHashMap<>();
     private long delayBeforeSendingEmails = 15;
     private Timer timer = new Timer();
@@ -24,10 +26,12 @@ public class KafkaMessageListener {
 
     public KafkaMessageListener(UserRepository userRepository,
                                 LogementRepository logementRepository,
-                                EmailSenderService emailSenderService) {
+                                EmailSenderService emailSenderService,
+                                TwilioSmsSender twilioSmsSender) {
         this.userRepository = userRepository;
         this.logementRepository = logementRepository;
         this.emailSenderService = emailSenderService;
+        this.twilioSmsSender = twilioSmsSender;
     }
 
     @KafkaListener(topics = "housing_topic", groupId = "housing_consumer_group")
@@ -59,11 +63,12 @@ public class KafkaMessageListener {
     private void sendEmails() {
         for (Map.Entry<User, List<Logement>> entry : userLogementsMap.entrySet()) {
             User user = entry.getKey();
-            System.out.println("-----------------------------------> User : "+user.toString());
             List<Logement> logements = entry.getValue();
             if (!logements.isEmpty()) {
                 String emailContent = generateEmailContent(logements);
                 emailSenderService.sendEmail(user.getEmail(), "Nouvelles propositions de logement", emailContent);
+                SmsRequest smsRequest = new SmsRequest(user.getPhoneNumber(), generateSmsContent());
+                twilioSmsSender.sendSms(smsRequest);
             }
         }
         userLogementsMap.clear();
@@ -84,5 +89,12 @@ public class KafkaMessageListener {
         return content.toString();
     }
 
-
+    private String generateSmsContent() {
+        StringBuilder content = new StringBuilder("Nouvelles propositions de logement\n");
+        content.append("Nous vous invitons à les découvrir sur https://trouverunlogement.lescrous.fr/").append("\n")
+                .append("N'attendez pas trop longtemps, les offres partent rapidement !").append("\n")
+                .append("Cordialement,").append("\n")
+                .append("L’équipe Crous Notifier").append("\n");
+        return content.toString();
+    }
 }

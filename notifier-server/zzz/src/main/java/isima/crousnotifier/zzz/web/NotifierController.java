@@ -1,12 +1,11 @@
 
 package isima.crousnotifier.zzz.web;
 
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import isima.crousnotifier.zzz.service.TelegramService;
+import isima.crousnotifier.zzz.services.TelegramService;
 
 @RestController()
 @RequestMapping("/notifier")

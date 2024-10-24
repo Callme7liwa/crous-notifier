@@ -1,7 +1,7 @@
 package isima.crousnotifier.zzz.services;
 
+import isima.crousnotifier.zzz.models.SmsRequest;
 import isima.crousnotifier.zzz.models.User;
-import isima.crousnotifier.zzz.repositories.LogementRepository;
 import isima.crousnotifier.zzz.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,8 +12,8 @@ import java.util.Optional;
 @AllArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final LogementRepository logementRepository;
     private final EmailSenderService emailSenderService;
+    private final TwilioSmsSender twilioSmsSender;
 
     public User registerUser(User user) throws Exception {
         Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
@@ -31,6 +31,8 @@ public class UserService {
                         "L’équipe Crous Notifier\n" +
                         "Simplifiez votre recherche de logement étudiant."
         );
+        SmsRequest smsRequest = new SmsRequest(user.getPhoneNumber(), user.getFullName() + ", Votre compte a été crée avec succès !");
+        twilioSmsSender.sendSms(smsRequest);
         return userRepository.save(user);
     }
 }
