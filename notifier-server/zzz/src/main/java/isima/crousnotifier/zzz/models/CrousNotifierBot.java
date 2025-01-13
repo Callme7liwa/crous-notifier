@@ -34,7 +34,6 @@ public class CrousNotifierBot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
             String chatId = String.valueOf(update.getMessage().getChatId());
-            System.out.println("Chat ID: " + chatId); // Print or store the chat ID
         }
     }
 
@@ -42,7 +41,6 @@ public class CrousNotifierBot extends TelegramLongPollingBot {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(groupId);
         sendMessage.setText(message);
-
         try {
             execute(sendMessage);
         } catch (TelegramApiException e) {

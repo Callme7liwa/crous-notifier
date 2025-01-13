@@ -7,9 +7,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class TwilioInitializer {
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(TwilioInitializer.class);
-
     private final TwilioConfiguration twilioConfiguration;
 
     public TwilioInitializer(TwilioConfiguration twilioConfiguration) {
@@ -18,6 +15,5 @@ public class TwilioInitializer {
                 twilioConfiguration.getAccountSid(),
                 twilioConfiguration.getAuthToken()
         );
-        LOGGER.info("Twilio initialized ... with account sid {} ", twilioConfiguration.getAccountSid());
     }
 }

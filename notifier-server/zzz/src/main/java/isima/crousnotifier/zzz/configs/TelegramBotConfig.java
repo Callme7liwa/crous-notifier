@@ -12,15 +12,15 @@ import isima.crousnotifier.zzz.models.CrousNotifierBot;
 public class TelegramBotConfig {
 
     @Bean
-    public TelegramBotsApi telegramBotsApi(CrousNotifierBot crousNotifierBot) throws TelegramApiException {
+    public TelegramBotsApi telegramBotsApi(CrousNotifierBot crousNotifierBot)
+            throws TelegramApiException {
         TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
-        botsApi.registerBot(crousNotifierBot);  // Registers the bot
+        botsApi.registerBot(crousNotifierBot);
         return botsApi;
     }
 
     @Bean
     public CrousNotifierBot crousNotifierBot() {
-        return new CrousNotifierBot();  // Create bot instance
+        return new CrousNotifierBot();
     }
-    
 }

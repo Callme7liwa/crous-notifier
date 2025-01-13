@@ -11,6 +11,7 @@ import pandas as pd
 import six
 import sys
 import re
+import os
 
 if sys.version_info >= (3, 12, 0):
     sys.modules['kafka.vendor.six.moves'] = six.moves
@@ -139,7 +140,8 @@ def main():
     try:
         print("Starting housing search...")
         logements_data = search_logements(driver, "", 0)
-        save_to_csv(logements_data, "logements.csv")
+        project_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "logements.csv")
+        save_to_csv(logements_data, project_path)
         send_to_kafka(logements_data)
     except Exception as e:
         print(f"An error occurred: {e}")

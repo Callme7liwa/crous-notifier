@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/users")
@@ -16,7 +18,7 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         try {
-            User registeredUser = userService.registerUser(user);
+            Optional<User> registeredUser = userService.registerUser(user);
             return ResponseEntity.ok(registeredUser);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

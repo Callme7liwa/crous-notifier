@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class SmsRequest {
     @NotBlank
-    private final String phoneNumber; // destination
+    private final String phoneNumber;
     @NotBlank
     private final String message;
 
