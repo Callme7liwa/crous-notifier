@@ -16,7 +16,4 @@ public class Logement {
     private String titre;
     private String description;
     private String codeZip;
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id")
-//    private User user;
 }

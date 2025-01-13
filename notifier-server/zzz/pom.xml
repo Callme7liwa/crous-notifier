@@ -70,7 +70,12 @@
             <groupId>org.telegram</groupId>
             <artifactId>telegrambots</artifactId>
             <version>6.1.0</version> <!-- Ensure you're using a recent version -->
-		    </dependency>
+        </dependency>
+        <dependency>
+            <groupId>com.twilio.sdk</groupId>
+            <artifactId>twilio</artifactId>
+            <version>7.37.0</version>
+        </dependency>
     </dependencies>
 
     <build>

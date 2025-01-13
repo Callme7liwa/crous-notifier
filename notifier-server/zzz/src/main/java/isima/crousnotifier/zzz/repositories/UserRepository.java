@@ -8,9 +8,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findByEmail(String email);
     @Query("SELECT u FROM users u WHERE " +
-           "u.listCodeDepartement LIKE %:codeDepartement% " +
-           "OR u.listCodeDepartement = :codeDepartement")
-    List<User> findByListCodeDepartement(@Param("codeDepartement") String codeDepartement);
+           "u.listCodeZip LIKE %:codeZip% " +
+           "OR u.listCodeZip = :codeZip")
+    List<User> findByListCodeZip(@Param("codeZip") String codeZip);
+
+    Optional<User> findByEmail(String email);
 }

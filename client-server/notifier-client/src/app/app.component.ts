@@ -39,32 +39,32 @@ export class AppComponent {
 
   private createCrousList(): OptionCrous[] {
     return [
-      { value: 'aix-marseille-avignon', display: 'CROUS Aix-Marseille-Avignon' },
-      { value: 'amiens-picardie', display: 'CROUS Amiens-Picardie' },
-      { value: 'antilles-guyane', display: 'CROUS Antilles-Guyane' },
-      { value: 'besancon', display: 'CROUS Besançon' },
-      { value: 'bordeaux-aquitaine', display: 'CROUS Bordeaux-Aquitaine' },
-      { value: 'clermont-auvergne', display: 'CROUS Clermont-Auvergne' },
-      { value: 'corse', display: 'CROUS Corse' },
-      { value: 'creteil', display: 'CROUS Créteil' },
-      { value: 'dijon', display: 'CROUS Dijon' },
-      { value: 'grenoble-alpes', display: 'CROUS Grenoble-Alpes' },
-      { value: 'lille-nord-pas-de-calais', display: 'CROUS Lille-Nord-Pas-de-Calais' },
-      { value: 'limoges', display: 'CROUS Limoges' },
-      { value: 'lyon-saint-etienne', display: 'CROUS Lyon-Saint-Étienne' },
-      { value: 'montpellier-occitanie', display: 'CROUS Montpellier-Occitanie' },
-      { value: 'nancy-metz', display: 'CROUS Nancy-Metz' },
-      { value: 'nantes-pays-de-la-loire', display: 'CROUS Nantes-Pays de la Loire' },
-      { value: 'nice-toulon', display: 'CROUS Nice-Toulon' },
-      { value: 'orleans-tours', display: 'CROUS Orléans-Tours' },
-      { value: 'paris', display: 'CROUS Paris' },
-      { value: 'poitiers', display: 'CROUS Poitiers' },
-      { value: 'reims', display: 'CROUS Reims' },
-      { value: 'rennes-bretagne', display: 'CROUS Rennes-Bretagne' },
-      { value: 'rouen-normandie', display: 'CROUS Rouen-Normandie' },
-      { value: 'strasbourg', display: 'CROUS Strasbourg' },
-      { value: 'toulouse-occitanie', display: 'CROUS Toulouse-Occitanie' },
-      { value: 'versailles', display: 'CROUS Versailles' }
+      { value: '13000', display: 'CROUS Aix-Marseille-Avignon' },
+      { value: '80000', display: 'CROUS Amiens-Picardie' },
+      { value: '97100', display: 'CROUS Antilles-Guyane' },
+      { value: '25000', display: 'CROUS Besançon' },
+      { value: '33000', display: 'CROUS Bordeaux-Aquitaine' },
+      { value: '63000', display: 'CROUS Clermont-Auvergne' },
+      { value: '20000', display: 'CROUS Corse' },
+      { value: '94000', display: 'CROUS Créteil' },
+      { value: '21000', display: 'CROUS Dijon' },
+      { value: '38000', display: 'CROUS Grenoble-Alpes' },
+      { value: '59000', display: 'CROUS Lille-Nord-Pas-de-Calais' },
+      { value: '87000', display: 'CROUS Limoges' },
+      { value: '69000', display: 'CROUS Lyon-Saint-Étienne' },
+      { value: '34000', display: 'CROUS Montpellier-Occitanie' },
+      { value: '54000', display: 'CROUS Nancy-Metz' },
+      { value: '44000', display: 'CROUS Nantes-Pays de la Loire' },
+      { value: '06000', display: 'CROUS Nice-Toulon' },
+      { value: '45000', display: 'CROUS Orléans-Tours' },
+      { value: '75000', display: 'CROUS Paris' },
+      { value: '86000', display: 'CROUS Poitiers' },
+      { value: '51100', display: 'CROUS Reims' },
+      { value: '35000', display: 'CROUS Rennes-Bretagne' },
+      { value: '76000', display: 'CROUS Rouen-Normandie' },
+      { value: '67000', display: 'CROUS Strasbourg' },
+      { value: '31000', display: 'CROUS Toulouse-Occitanie' },
+      { value: '78000', display: 'CROUS Versailles' }
     ];
   }
 
@@ -90,7 +90,7 @@ export class AppComponent {
       alert('Form submitted successfully!');
     }
   }
-  
+
   handleAddSelectedCrous(option: string): void {
     option = option.substring(3, option.length);
     if(this.selectedCrous.indexOf(option)==-1)
@@ -101,10 +101,10 @@ export class AppComponent {
   handleRemoveSelectedCrous(option: string): void {
     // Remove the selected option from the selectedCrous array
     this.selectedCrous = this.selectedCrous.filter(c => c !== option);
-  
+
     // Add the removed CROUS back to the display list
     const removedCrous: OptionCrous | undefined = this.baseListCrous.find(c => c.value === option);
-    
+
     if (removedCrous) {
       this.crousListToDisplay.push(removedCrous);
     }
